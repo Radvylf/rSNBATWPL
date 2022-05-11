@@ -1,0 +1,25 @@
+{
+  "name": "rsnbatwpl",
+  "version": "1.0.0",
+  "description": "Radvylf Should Not Be Allowed To Write Programming Languages",
+  "main": "rsnbatwpl.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Radvylf/rSNBATWPL.git"
+  },
+  "keywords": [
+    "radvylf",
+    "cursed",
+    "programming",
+    "language"
+  ],
+  "author": "Radvylf Programs",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Radvylf/rSNBATWPL/issues"
+  },
+  "homepage": "https://github.com/Radvylf/rSNBATWPL#readme"
+}
