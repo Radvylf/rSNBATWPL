@@ -2668,4 +2668,4 @@ var render = (parsd) => {
     return [...op.map(o => " ".repeat(first[0].length) + o + " ".repeat(arg[0].length)), ...[...Array(first.length)].map((_, i) => first[i] + " ".repeat(op[0].length) + arg[i])].join("\n");
 };
 
-module.exports.rSNBATWPL = rSNBATWPL;
+module.exports = rSNBATWPL;
