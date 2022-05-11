@@ -36,7 +36,7 @@ Installing rSNBATWPL may just be a thing which you can do today, and not yesterd
 2. Install the `rsnbatwpl` NPM package
 3. Reimplement the core language features yourself
 
-You can also use the online interpreter: https://radvylf.github.io/rSNBATWPL
+You can also use the online interpreter: https://radvylf.github.io/rSNBATWPL/rsnbatwpl.html
 
 ## Basics
 
