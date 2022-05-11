@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+    <head>
+        <title>rSNBATWPL</title>
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="google" content="notranslate">
+        <meta charset="utf-8">
+        
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible&family=Roboto+Mono&display=swap">
+        
+        <style>
+            body {
+                margin: 12px;
+                
+                font-size: 12px;
+                font-family: "Roboto Mono", monospace;
+                line-height: 1.25;
+                
+                background-color: #000;
+                color: #fff;
+            }
+            
+            #body, #prompt {
+                white-space: pre-wrap;
+                word-break: break-all;
+            }
+            
+            input {
+                border: none;
+                
+                font-size: 12px;
+                font-family: "Roboto Mono", monospace;
+                line-height: 1.25;
+                
+                padding: 0;
+                
+                background-color: inherit;
+                color: inherit;
+            }
+            
+            input:focus {
+                outline: none;
+            }
+            
+            #box {
+                display: flex;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="body"></div>
+        
+        <div id="box">
+            <div id="prompt">(rsnbatwpl) </div>
+            
+            <input type="text" id="input"/>
+        </div>
+        
+        <script>
+            var require = (pkg) => {
+                if (pkg == "util")
+                    return {
+                        inspect: (data) => {
+                            var stringify = (data, circular = []) => {
+                                var circf = circular.find(c => c == data);
+
+                                if (circf)
+                                    return "[Circular]";
+
+                                if (data == null)
+                                    return null;
+
+                                if (typeof data == "bigint")
+                                    return String(data) + "n";
+                                if (typeof data == "number" || typeof data == "string" || typeof data == "boolean")
+                                    return JSON.stringify(data);
+                                if (typeof data == "function")
+                                    return "[Fuction]";
+
+                                var ind = (str, count) => str.split("\n").map(s => " ".repeat(count) + s).join("\n");
+                                
+                                if (Array.isArray(data)) {
+                                    var dcopy = [];
+
+                                    for (var x of data)
+                                        dcopy.push(stringify(x, [...circular, data]));
+
+                                    if (dcopy.some(d => d.includes("\n")) || dcopy.reduce((s, y) => s + y.length + 2, 0) > 80)
+                                        return "[\n" + dcopy.map(d => ind(d, 2)).join(",\n") + "\n]";
+                                    
+                                    return "[ " + dcopy.join(", ") + " ]";
+                                }
+
+                                if (data instanceof Map) {
+                                    var dcopy = [];
+
+                                    for (var x of data)
+                                        dcopy.push([JSON.stringify(x[0]), stringify(x[1], [...circular, data])]);
+                                    
+                                    if (dcopy.some(d => d[1].includes("\n")) || dcopy.reduce((s, y) => s + y[0].length + y[1].length + 6, 0) > 80)
+                                        return "Map(" + dcopy.length + ") {\n" + dcopy.map(d => ind(d[0] + " => " + d[1], 2)).join(",\n") + "\n}";
+
+                                    return "Map(" + dcopy.length + ") { " + dcopy.map(d => d[0] + " => " + d[1]).join(", ") + " }";
+                                }
+
+                                var dcopy = [];
+
+                                for (var x in data)
+                                    dcopy.push([JSON.stringify(x), stringify(data[x], [...circular, data])]);
+
+                                if (dcopy.some(d => d[1].includes("\n")) || dcopy.reduce((s, y) => s + y[0].length + y[1].length + 4, 0) > 80)
+                                    return "{\n" + dcopy.map(d => ind(d[0] + ": " + d[1], 2)).join(",\n") + "\n}";
+
+                                return "{ " + dcopy.map(d => d[0] + ": " + d[1]).join(", ") + " }";
+                            };
+                            
+                            return stringify(data);
+                        }
+                    };
+            };
+            
+            var module = {};
+        </script>
+        
+        <script src="rsnbatwpl.js"></script>
+        
+        <script>
+            (async () => {
+                var body = document.getElementById("body");
+                var box = document.getElementById("box");
+                var prompt = document.getElementById("prompt");
+                var input = document.getElementById("input");
+                
+                box.style.display = "none";
+                
+                document.body.parentNode.onclick = () => window.getSelection().isCollapsed && box.style.display != "none" ? input.focus() : null;
+                
+                var input_row = (prompt_info, history) => new Promise((finish) => {
+                    var indx = null;
+                    var top = null;
+                    
+                    box.style.display = "";
+                    
+                    prompt.textContent = prompt_info;
+                    
+                    input.focus();
+                    
+                    input.oninput = () => {
+                        input.size = Math.min(input.value.length + 20, 80);
+                    };
+                    
+                    input.onkeydown = (info) => {
+                        if (info.code == "Enter" && !info.shiftKey && !info.ctrlKey && !info.altKey && !info.metaKey) {
+                            box.style.display = "none";
+                            
+                            input.blur();
+                            
+                            var data = input.value;
+                            
+                            input.value = "";
+                            input.size = 20;
+                            
+                            body.textContent += (body.textContent ? "\n" : "") + prompt_info + data;
+                            
+                            if (history[history.length - 1] != data)
+                                history.push(data);
+                            
+                            finish(data);
+                        }
+                        
+                        if (info.code == "ArrowUp" && !info.shiftKey && !info.ctrlKey && !info.altKey && !info.metaKey) {
+                            if (indx == null)
+                                top = input.value;
+                            
+                            indx = (indx == null) ? history.length - 1 : Math.max(indx - 1, 0);
+                            
+                            input.value = history[indx];
+                            input.size = Math.min(input.value.length + 20, 80);
+                            
+                            info.preventDefault();
+                        }
+                        
+                        if (info.code == "ArrowDown" && !info.shiftKey && !info.ctrlKey && !info.altKey && !info.metaKey) {
+                            indx = (indx == history.length - 1 || indx == null) ? null : indx + 1;
+                            
+                            input.value = (indx == null) ? top : history[indx];
+                            input.size = Math.min(input.value.length + 20, 80);
+                            
+                            info.preventDefault();
+                        }
+                    };
+                });
+                
+                var input_hist = [""];
+                var rsn_hist = [""];
+                
+                var rsn = rSNBATWPL;
+                
+                var try_rsn = async () => {
+                    var scop = null;
+
+                    var script, data;
+
+                    while (1) {
+                        script = await input_row("(rSNBATWPL) ", rsn_hist);
+                        
+                        data = await rsn(script, null, async (data) => {
+                            var split = data.sprints.split("\n");
+                            
+                            body.textContent += split.slice(0, -1).map(s => "\n" + s).join("");
+                            
+                            return await input_row(data.sprints.slice(-1)[0], input_hist);
+                        }, scop, (str) => (body.textContent += "\n" + str));
+
+                        scop = data.scop;
+
+                        body.textContent += data.prints.map(s => "\n" + s).join("");
+
+                        scop.set("(prints)", {
+                            type: "array",
+                            data: []
+                        });
+
+                        body.textContent += "\n" + data.out;
+                    }
+                };
+                
+                try_rsn();
+            })();
+        </script>
+    </body>
+</html>

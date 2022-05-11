@@ -3,7 +3,7 @@
 
 // rsnbatwjs.pl, raisin-batwitchs
 
-var rSNBATWPL = async (code_unsafe, inputs = null, input_prom = null, pscop = null) => {
+var rSNBATWPL = async (code_unsafe, inputs = null, input_prom = null, pscop = null, log = console.log) => {
     var code_2 = code_unsafe.replace(/\r\n?/g, "\n");
 
     var braks = (p) => {
@@ -546,7 +546,7 @@ var rSNBATWPL = async (code_unsafe, inputs = null, input_prom = null, pscop = nu
         if (circf)
             return circf[1];
 
-        if (data == "null")
+        if (data == null)
             return null;
 
         if (typeof data == "number" || typeof data == "bigint" || typeof data == "string" || typeof data == "boolean" || typeof data == "function")
@@ -1883,7 +1883,7 @@ var rSNBATWPL = async (code_unsafe, inputs = null, input_prom = null, pscop = nu
     global.set("dbg", {
         type: "builtin",
         partial: 0,
-        data: async (data, scop) => (console.log(util.inspect(await do_run(data, scop), {
+        data: async (data, scop) => (log(util.inspect(await do_run(data, scop), {
             showHidden: false,
             depth: null,
             colors: true
@@ -1895,7 +1895,7 @@ var rSNBATWPL = async (code_unsafe, inputs = null, input_prom = null, pscop = nu
     global.set("dbg.data", {
         type: "builtin",
         partial: 0,
-        data: async (data, scop) => (console.log(util.inspect(await do_run(data, scop).data, {
+        data: async (data, scop) => (log(util.inspect((await do_run(data, scop)).data, {
             showHidden: false,
             depth: null,
             colors: true
@@ -1907,7 +1907,7 @@ var rSNBATWPL = async (code_unsafe, inputs = null, input_prom = null, pscop = nu
     global.set("dbg.pars", {
         type: "builtin",
         partial: 0,
-        data: (data, scop) => (console.log(util.inspect(data, {
+        data: (data, scop) => (log(util.inspect(data, {
             showHidden: false,
             depth: null,
             colors: true
