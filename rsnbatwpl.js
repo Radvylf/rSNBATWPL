@@ -2618,8 +2618,6 @@ var rSNBATWPL = async (code_unsafe, inputs = null, input_prom = null, pscop = nu
         })
     });
     
-    // slice, flip, backw, split, squish, crush, squishwith, crushwith, group, sgroup, to, ito
-
     if (pscop)
         global = pscop;
 
