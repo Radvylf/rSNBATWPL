@@ -172,10 +172,13 @@
                         }
                         
                         if (info.code == "ArrowUp" && !info.shiftKey && !info.ctrlKey && !info.altKey && !info.metaKey) {
+                            if (indx == 0)
+                                return;
+                            
                             if (indx == null)
                                 top = input.value;
                             
-                            indx = (indx == null) ? history.length - 1 : Math.max(indx - 1, 0);
+                            indx = (indx == null) ? history.length - 1 : indx - 1;
                             
                             input.value = history[indx];
                             input.size = Math.min(input.value.length + 20, 80);
@@ -184,7 +187,10 @@
                         }
                         
                         if (info.code == "ArrowDown" && !info.shiftKey && !info.ctrlKey && !info.altKey && !info.metaKey) {
-                            indx = (indx == history.length - 1 || indx == null) ? null : indx + 1;
+                            if (indx == null)
+                                return;
+                            
+                            indx = (indx == history.length - 1) ? null : indx + 1;
                             
                             input.value = (indx == null) ? top : history[indx];
                             input.size = Math.min(input.value.length + 20, 80);
@@ -212,7 +218,7 @@
                             
                             body.textContent += split.slice(0, -1).map(s => "\n" + s).join("");
                             
-                            return await input_row(data.sprints.slice(-1)[0], input_hist);
+                            return await input_row(split.slice(-1)[0], input_hist);
                         }, scop, (str) => (body.textContent += "\n" + str));
 
                         scop = data.scop;
