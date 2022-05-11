@@ -1810,7 +1810,7 @@ var rSNBATWPL = async (code_unsafe, inputs = null, input_prom = null, pscop = nu
         type: "builtin",
         partial: 0,
         data: async (data, scop) => ({
-            type: "float",
+            type: "number",
             data: await cast.float(await do_run(data, scop))
         })
     });
