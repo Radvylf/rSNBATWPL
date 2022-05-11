@@ -223,7 +223,7 @@
 
                         scop = data.scop;
 
-                        body.textContent += data.prints.map(s => "\n" + s).join("");
+                        body.textContent += data.sprints ? "\n" + data.sprints : "";
 
                         scop.set("(prints)", {
                             type: "array",
