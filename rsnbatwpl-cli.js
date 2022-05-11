@@ -40,7 +40,7 @@
             await new Promise((r) => io.question("(rSNBATWPL) ", async (script) => {
                 io.close();
                 
-                data = await rsn(script, scop, null, (data) => new Promise((r) => {
+                data = await rsn(script, null, (data) => new Promise((r) => {
                     io = io_c.createInterface({
                         input: process.stdin,
                         output: process.stdout,
@@ -64,7 +64,7 @@
 
                         r(inp);
                     });
-                }));
+                }), scop);
                 
                 scop = data.scop;
                 
@@ -96,7 +96,7 @@
     var scop = null;
     var data;
     
-    data = await rsn(script, scop, inputs, (data) => new Promise((r) => {
+    data = await rsn(script, inputs, (data) => new Promise((r) => {
         io = io_c.createInterface({
             input: process.stdin,
             output: process.stdout,
@@ -120,7 +120,7 @@
             
             r(inp);
         });
-    }));
+    }), scop);
     
     if (data.sprints)
         console.log(data.sprints);
