@@ -1639,10 +1639,28 @@ var rSNBATWPL = async (code_unsafe, inputs = null, input_prom = null, pscop = nu
 
             if (print.type == "null")
                 return print;
-
-            (await var_from({
+            
+            var nid = await par_to__var({
                 id: "(prints)"
-            }, scop)).data.push(print);
+            }, scop);
+
+            var from = (nid.scopd ? nid.scop : scop).find(s => s.vars.has(nid.data));
+            var old = {
+                type: "null"
+            };
+
+            if (from)
+                old = from.vars.get(nid.data);
+
+            var prints = old;
+
+            if (prints.type != "array")
+                (from || (nid.scopd ? nid.scop[0] : scop[0])).vars.set("(prints)", prints = {
+                    type: "array",
+                    data: old.type == "null" ? [] : [old]
+                });
+            
+            prints.data.push(print);
 
             return print;
         })
