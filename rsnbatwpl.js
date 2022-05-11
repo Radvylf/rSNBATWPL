@@ -1763,7 +1763,7 @@ var rSNBATWPL = async (code_unsafe, inputs = null, input_prom = null, pscop = nu
         partial: 0,
         data: async (array, scop) => ({
             type: "array",
-            data: await cast.array(await do_run(array, scop)).slice(1)
+            data: (await cast.array(await do_run(array, scop))).slice(1)
         })
     });
 
