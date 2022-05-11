@@ -1708,7 +1708,10 @@ var rSNBATWPL = async (code_unsafe, inputs = null, input_prom = null, pscop = nu
             var data = await do_run(arg, scop);
 
             if (data.type == "builtin")
-                return data.partial;
+                return {
+                    type: "int",
+                    data: data.partial
+                };
 
             return {
                 type: "null"
