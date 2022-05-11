@@ -3,7 +3,7 @@
 
 // rsnbatwjs.pl, raisin-batwitchs
 
-var rSNBATWPL = async (code_unsafe, pscop = null, inputs = null, input_prom = null) => {
+var rSNBATWPL = async (code_unsafe, inputs = null, input_prom = null, pscop = null) => {
     var code_2 = code_unsafe.replace(/\r\n?/g, "\n");
 
     var braks = (p) => {
