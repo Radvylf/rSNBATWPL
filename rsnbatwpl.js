@@ -3,7 +3,7 @@
 
 // rsnbatwjs.pl, raisin-batwitchs
 
-var rSNBATWPL = async (code_unsafe, inputs = null, input_prom = null, pscop = null, log = console.log) => {
+var rSNBATWPL = async (code_unsafe, inputs = null, input_prom = null, pscop = null, log = console.log, slow_loops = false) => {
     var code_2 = code_unsafe.replace(/\r\n?/g, "\n");
 
     var braks = (p) => {
@@ -1946,8 +1946,12 @@ var rSNBATWPL = async (code_unsafe, inputs = null, input_prom = null, pscop = nu
             data: async (body, scope2) => {
                 var out = [];
 
-                while (await cast.bool(await do_run(cond, scope), scope))
+                while (await cast.bool(await do_run(cond, scope), scope)) {
                     out.push(await do_run(body, scope2));
+                    
+                    if (slow_loops)
+                        await new Promise((r) => setTimeout(r, 0));
+                }
 
                 return {
                     type: "array",
@@ -1966,8 +1970,12 @@ var rSNBATWPL = async (code_unsafe, inputs = null, input_prom = null, pscop = nu
             data: async (body, scope2) => {
                 var out = [await do_run(body, scope2)];
 
-                while (await cast.bool(await do_run(cond, scope), scope))
+                while (await cast.bool(await do_run(cond, scope), scope)) {
                     out.push(await do_run(body, scope2));
+                    
+                    if (slow_loops)
+                        await new Promise((r) => setTimeout(r, 0));
+                }
 
                 return {
                     type: "array",
@@ -2002,9 +2010,12 @@ var rSNBATWPL = async (code_unsafe, inputs = null, input_prom = null, pscop = nu
 
                 while (await cast.bool(await do_run(cond, scop), scop)) {
                     out.push(await do_run(body, scope2));
-
+                    
                     for (var stmt of stmts2.slice(2))
                         await do_run(stmt, scop);
+                    
+                    if (slow_loops)
+                        await new Promise((r) => setTimeout(r, 0));
                 }
 
                 return {
