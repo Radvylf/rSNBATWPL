@@ -324,7 +324,7 @@ var rSNBATWPL = async (code_unsafe, inputs = null, input_prom = null, pscop = nu
                 type: "number",
                 data: -Infinity
             };
-        if (id.match(/^-?\.?\d[\-\.\d]*$/))
+        if (id.match(/^-?\.?\d[\-\.'\d]*$/))
             return canonical_number(id);
         if (id[0] == "'")
             return {
@@ -474,6 +474,10 @@ var rSNBATWPL = async (code_unsafe, inputs = null, input_prom = null, pscop = nu
     };
 
     call = async (op, scope, arg) => {
+        // console.log(op, scope, arg);
+        
+        await new Promise((r) => setTimeout(r, 0));
+        
         var scopd_writ = (scopd_id, data) => {
             var from = scopd_id.scop.find(s => s.vars.has(scopd_id.data));
             var nscop = new Map();
@@ -812,7 +816,7 @@ var rSNBATWPL = async (code_unsafe, inputs = null, input_prom = null, pscop = nu
                 case "bool":
                     return Number(x.data);
                 case "array":
-                    return await Promise.all(x.data.map(y => cast.float(y, scop))).reduce((s, y) => s + y, 0);
+                    return (await Promise.all(x.data.map(y => cast.float(y, scop)))).reduce((s, y) => s + y, 0);
                 case "function":
                 case "builtin":
                     return -1;
@@ -842,7 +846,7 @@ var rSNBATWPL = async (code_unsafe, inputs = null, input_prom = null, pscop = nu
                         data: Number(x.data)
                     }, scop);
                 case "array":
-                    return await Promise.all(x.data.map(y => cast.int(y, scop))).reduce((s, y) => s + y, 0n);
+                    return (await Promise.all(x.data.map(y => cast.int(y, scop)))).reduce((s, y) => s + y, 0n);
                 case "function":
                 case "builtin":
                     return -1n;
@@ -898,7 +902,7 @@ var rSNBATWPL = async (code_unsafe, inputs = null, input_prom = null, pscop = nu
                 case "bool":
                     return x.data;
                 case "array":
-                    return await Promise.all(x.data.map(y => cast.bool(y, scop))).some(y => y);
+                    return (await Promise.all(x.data.map(y => cast.bool(y, scop)))).some(y => y);
                 case "function":
                 case "builtin":
                     return true;
@@ -1302,7 +1306,7 @@ var rSNBATWPL = async (code_unsafe, inputs = null, input_prom = null, pscop = nu
 
             return {
                 type: "bool",
-                data: aray.length == array.length && await Promise.all(aray.map((z, i) => quals(z, array[i], scop))).every(x => x.data)
+                data: aray.length == array.length && (await Promise.all(aray.map((z, i) => quals(z, array[i], scop)))).every(x => x.data)
             };
         }
 
