@@ -2226,13 +2226,13 @@ var rSNBATWPL = async (code_unsafe, inputs = null, input_prom = null, pscop = nu
                         type: "string",
                         data: await cast.string({
                             type: "array",
-                            data: f(await cast.array(c, s2), d, s)
+                            data: await f(await cast.array(c, s2), d, s)
                         }, s)
                     };
 
                 return {
                     type: "array",
-                    data: f(await cast.array(c, s2), d, s)
+                    data: await f(await cast.array(c, s2), d, s)
                 };
             }
         })
